@@ -30,7 +30,7 @@ trak.clean = function(str) {
 	if (!trak.options.clean) {
 		return str;
 	} else {
-		return str.toString().replace(/\s|'|"/g, this.options.delimeter).toLowerCase();
+		return str.toString().replace(/\s|'|'/g, this.options.delimeter).toLowerCase();
 	}
 };
 
@@ -92,11 +92,22 @@ trak.dataAttrEvent = function() {
  trak.trackExtrn = function(elm) {
 
  	// Here we check to see if the link is external
- 	var host = elm.target.hostname;
+ 	var href = elm.target.href;
+ 	var extrn = new RegExp('/' + window.location.host + '/');
 
- 	if(host !== window.location.hostname && trak.options.hostnames.indexOf(host) === -1){
- 		trak.event('ExternalLink', 'click', elm.target.href);
+ 	console.log(extrn.test(href));
+
+ 	if(!trak.isExternal(href)){
+ 		trak.event('ExternalLink', 'click', href);
  	}
+
+ };
+
+ trak.isExternal = function(url){
+	var match = url.match(/^([^:\/?#]+:)?(?:\/\/([^\/?#]*))?([^?#]+)?(\?[^#]*)?(#.*)?/);
+ 	if (typeof match[1] === 'string' && match[1].length > 0 && match[1].toLowerCase() !== location.protocol) return true;
+ 	if (typeof match[2] === 'string' && match[2].length > 0 && match[2].replace(new RegExp(':('+{'http:':80,'https:':443}[location.protocol]+')?$'), '') !== location.host) return true;
+ 	return false;
  };
 
 /**
@@ -169,7 +180,7 @@ trak.options = {
 	clean           : true, // trak.options.clean     = false
 	delimeter       : '_',  // trak.options.delimeter = '-'
 	trackType       : 'ga', // trak.options.trackType = 'ga' Available options: ga, _gaq & gtm
-	hostnames		: [''], // place any hostnames you wish to not track as "external" here
+	hostnames		: [''], // place any hostnames you wish to not track as 'external' here
 	additionalTypes : undefined,
 	debug           : true
 };

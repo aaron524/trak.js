@@ -90,11 +90,14 @@ trak.dataAttrEvent = function() {
  trak.trackExtrn = function(elm) {
 
  	// Here we check to see if the link is external
- 	var host = elm.target.hostname;
+ 	var href = elm.target.href;
 
- 	if(host !== window.location.hostname && trak.options.hostnames.indexOf(host) === -1){
- 		trak.event('ExternalLink', 'click', elm.target.href);
+ 	var hasExternalHref = (href && !href.match(/^#/) && !href.match(/^javascript:/));
+
+ 	if(hasExternalHref){
+ 		trak.event('ExternalLink', 'click', href);
  	}
+
  };
 
 /**
@@ -167,7 +170,6 @@ trak.options = {
 	clean           : true, // trak.options.clean     = false
 	delimeter       : '_',  // trak.options.delimeter = '-'
 	trackType       : 'ga', // trak.options.trackType = 'ga' Available options: ga, _gaq & gtm
-	hostnames		: [''], // place any hostnames you wish to not track as "external" here
 	additionalTypes : undefined,
 	debug           : true
 };

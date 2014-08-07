@@ -9,6 +9,12 @@ function trak() {
 			trakElements[i].attachEvent('onclick', trak.dataAttrEvent);
 		}
 	}
+
+	var aTags = document.querySelectorAll('a');
+	for (var j = 0; j < aTags.length ; j++) {
+		aTags[j].addEventListener('click', trak.trackExtrn);
+	}
+
 }
 
 
@@ -75,6 +81,21 @@ trak.dataAttrEvent = function() {
 		trak.attrEvent.call(this);
 	}
 };
+
+
+/**
+ * trackExtrn
+ * Used when an external link is clicked
+ */
+ trak.trackExtrn = function(elm) {
+
+ 	// Here we check to see if the link is external
+ 	var host = elm.target.hostname;
+
+ 	if(host !== window.location.hostname && trak.options.hostnames.indexOf(host) === -1){
+ 		trak.event('ExternalLink', 'click', elm.target.href);
+ 	}
+ };
 
 /**
  * attrEvent
@@ -146,6 +167,7 @@ trak.options = {
 	clean           : true, // trak.options.clean     = false
 	delimeter       : '_',  // trak.options.delimeter = '-'
 	trackType       : 'ga', // trak.options.trackType = 'ga' Available options: ga, _gaq & gtm
+	hostnames		: [''], // place any hostnames you wish to not track as "external" here
 	additionalTypes : undefined,
 	debug           : true
 };

@@ -92,10 +92,9 @@ trak.dataAttrEvent = function() {
  	// Here we check to see if the link is external
  	var href = elm.target.href;
 
- 	var hasExternalHref = (href && !href.match(/^#/) && !href.match(/^javascript:/));
-
- 	if(hasExternalHref){
- 		trak.event('ExternalLink', 'click', href);
+ 	if ((href.match(/^https?\:/i)) && (!href.match(document.domain))){
+		var extLink = href.replace(/^https?\:\/\//i, '');
+		trak.event('ExternalLink', 'click', href);
  	}
 
  };
